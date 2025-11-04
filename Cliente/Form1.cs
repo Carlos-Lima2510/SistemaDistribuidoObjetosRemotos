@@ -4,6 +4,7 @@ using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
 using System.Windows.Forms;
+using System.Configuration;
 
 namespace Cliente
 {
@@ -28,7 +29,7 @@ namespace Cliente
 
                 conversor = (IConversor)Activator.GetObject(
                     typeof(IConversor),
-                    "tcp://localhost:8085/ConversorService");
+                    $"tcp://{ConfigurationManager.AppSettings["host"]}:{Int32.Parse(ConfigurationManager.AppSettings["port"])}/ConversorService");
             }
             catch (Exception ex)
             {
@@ -40,7 +41,6 @@ namespace Cliente
         {
             try
             {
-                // Verificar si hay conexión con el servicio remoto
                 if (conversor == null)
                 {
                     MessageBox.Show("No hay conexión con el servidor remoto. Intente reiniciar la aplicación.",
@@ -48,7 +48,6 @@ namespace Cliente
                     return;
                 }
 
-                // Validar que el usuario haya introducido solo una moneda
                 bool tieneEuros = !string.IsNullOrWhiteSpace(txtEuros.Text);
                 bool tieneDolares = !string.IsNullOrWhiteSpace(txtDolares.Text);
 
@@ -69,7 +68,6 @@ namespace Cliente
                 double cantidad;
                 double resultado;
 
-                // Conversión según el campo llenado
                 if (tieneEuros)
                 {
                     if (!double.TryParse(txtEuros.Text, out cantidad))
@@ -80,7 +78,7 @@ namespace Cliente
                     }
 
                     resultado = conversor.ConvertEurToUsd(cantidad);
-                    txtDolares.Text = resultado.ToString("F2"); // F2 → 2 decimales
+                    txtDolares.Text = resultado.ToString("F2"); 
                 }
                 else
                 {
@@ -111,6 +109,5 @@ namespace Cliente
                                 "Error inesperado", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
     }
 }

@@ -2,6 +2,7 @@
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
+using System.Configuration;
 
 namespace Servidor
 {
@@ -9,7 +10,8 @@ namespace Servidor
     {
         static void Main(string[] args)
         {
-            TcpChannel channel = new TcpChannel(8085);
+            int port = Int32.Parse(ConfigurationManager.AppSettings["port"]);
+            TcpChannel channel = new TcpChannel(port);
             ChannelServices.RegisterChannel(channel, false);
 
             RemotingConfiguration.RegisterWellKnownServiceType(
@@ -17,7 +19,7 @@ namespace Servidor
                 "ConversorService",
                 WellKnownObjectMode.SingleCall);
 
-            Console.WriteLine("Servidor Remoting iniciado en puerto 8085...");
+            Console.WriteLine($"Servidor Remoting iniciado en puerto {port}...");
             Console.WriteLine("Esperando peticiones...");
             Console.ReadLine();
         }

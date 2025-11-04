@@ -1,20 +1,42 @@
 ﻿using System;
+using System.Threading;
 
 namespace Conversor
 {
     public class Conversor : MarshalByRefObject, IConversor
     {
-        private const double eurToUsdRate = 1.1;
-        private const double usdToEurRate = 0.9;
+        private const double eurToUsdRate = 1.15;
+        private const double usdToEurRate = 0.87;
         public double ConvertEurToUsd(double euros)
         {
-            Console.WriteLine($"Convirtiendo {euros} EUR a USD");
-            return euros * eurToUsdRate;
+            double resultado = 0;
+
+            Thread hilo = new Thread(() =>
+            {
+                resultado = euros * eurToUsdRate;
+                Console.WriteLine($"Convertido {euros} EUR a {resultado} USD");
+            });
+
+            hilo.Start();
+            hilo.Join();
+
+            return resultado;
+
         }
         public double ConvertUsdToEur(double dolares)
         {
-            Console.WriteLine($"Convirtiendo {dolares} USD a EUR");
-            return dolares * usdToEurRate;
+            double resultado = 0;
+
+            Thread hilo = new Thread(() =>
+            {
+                resultado = dolares * usdToEurRate;
+                Console.WriteLine($"Convertido {dolares} USD a {resultado} EUR");
+            });
+
+            hilo.Start();
+            hilo.Join();
+
+            return resultado;
         }
     }
 }
