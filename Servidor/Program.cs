@@ -1,5 +1,4 @@
-﻿using Conversor;
-using System;
+﻿using System;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
@@ -10,7 +9,7 @@ namespace Servidor
     {
         static void Main(string[] args)
         {
-            TcpChannel channel = new TcpChannel(8080);
+            TcpChannel channel = new TcpChannel(8085);
             ChannelServices.RegisterChannel(channel, false);
 
             RemotingConfiguration.RegisterWellKnownServiceType(
